@@ -4,6 +4,7 @@ import {
   collegeModel,
   predictCluster,
   clusterStats,
+  sampleCollegesPerCluster,
   CLUSTER_COLORS,
   formatINR,
   type CollegeInput,
@@ -106,6 +107,7 @@ function ScatterPlot({ highlight }: { highlight: CollegeInput | null }) {
 
 function Index() {
   const stats = useMemo(clusterStats, []);
+  const samples = useMemo(sampleCollegesPerCluster, []);
   const [input, setInput] = useState<CollegeInput>({
     studentFacultyRatio: 15,
     annualFees: 120000,
