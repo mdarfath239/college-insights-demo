@@ -36,11 +36,21 @@ export interface CollegeInput {
   infrastructureScore: number;
 }
 
+export interface NearestCollege {
+  name: string;
+  category: string;
+  distance: number;
+  placementPercentage: number;
+  averagePackage: number;
+  annualFees: number;
+}
+
 export interface Prediction {
   clusterId: number;
   category: string;
   distance: number;
   distances: number[];
+  nearestColleges: NearestCollege[];
 }
 
 /** Replicates sklearn: scale with StandardScaler, then nearest centroid (KMeans.predict). */
@@ -59,12 +69,51 @@ export function predictCluster(input: CollegeInput): Prediction {
     Math.sqrt(center.reduce((sum, c, i) => sum + (c - scaled[i]!) ** 2, 0))
   );
   const clusterId = distances.indexOf(Math.min(...distances));
+
+  const nearestColleges = collegeModel.colleges
+    .map((c) => {
+      const cr = [
+        c.Student_Faculty_Ratio,
+        c.Annual_Fees_INR,
+        c.Placement_Percentage,
+        c.Average_Package_LPA,
+        c.Infrastructure_Score,
+      ];
+      const cs = cr.map(
+        (v, i) => (v - collegeModel.scalerMean[i]!) / collegeModel.scalerScale[i]!
+      );
+      const d = Math.sqrt(cs.reduce((sum, v, i) => sum + (v - scaled[i]!) ** 2, 0));
+      return {
+        name: c.College_Name,
+        category: c.Category,
+        distance: d,
+        placementPercentage: c.Placement_Percentage,
+        averagePackage: c.Average_Package_LPA,
+        annualFees: c.Annual_Fees_INR,
+      };
+    })
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 5);
+
   return {
     clusterId,
     category: collegeModel.clusterNames[String(clusterId)]!,
     distance: distances[clusterId]!,
     distances,
+    nearestColleges,
   };
+}
+
+/** A few real example colleges per cluster, shown on the cluster cards. */
+export function sampleCollegesPerCluster(perCluster = 3) {
+  const names = Object.values(collegeModel.clusterNames);
+  return names.map((name) => ({
+    name,
+    samples: collegeModel.colleges
+      .filter((c) => c.Category === name)
+      .slice(0, perCluster)
+      .map((c) => c.College_Name),
+  }));
 }
 
 export function clusterStats() {
