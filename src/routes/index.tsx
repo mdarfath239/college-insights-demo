@@ -164,6 +164,14 @@ function Index() {
                 <div className="flex justify-between"><dt className="text-muted-foreground">Avg fees</dt><dd className="font-mono">{formatINR(s.avgFees)}</dd></div>
                 <div className="flex justify-between"><dt className="text-muted-foreground">Avg infra score</dt><dd className="font-mono">{s.avgInfra.toFixed(1)}/10</dd></div>
               </dl>
+              <div className="mt-4 border-t border-border pt-3">
+                <p className="text-[11px] uppercase tracking-widest font-mono text-muted-foreground">Examples</p>
+                <ul className="mt-1.5 space-y-1">
+                  {samples.find((s) => s.name === s2)?.samples.map((n) => (
+                    <li key={n} className="truncate text-xs text-muted-foreground">{n}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
