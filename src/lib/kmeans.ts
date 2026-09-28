@@ -53,16 +53,16 @@ export function predictCluster(input: CollegeInput): Prediction {
     input.infrastructureScore,
   ];
   const scaled = raw.map(
-    (v, i) => (v - collegeModel.scalerMean[i]) / collegeModel.scalerScale[i]
+    (v, i) => (v - collegeModel.scalerMean[i]!) / collegeModel.scalerScale[i]!
   );
   const distances = collegeModel.centers.map((center) =>
-    Math.sqrt(center.reduce((sum, c, i) => sum + (c - scaled[i]) ** 2, 0))
+    Math.sqrt(center.reduce((sum, c, i) => sum + (c - scaled[i]!) ** 2, 0))
   );
   const clusterId = distances.indexOf(Math.min(...distances));
   return {
     clusterId,
-    category: collegeModel.clusterNames[String(clusterId)],
-    distance: distances[clusterId],
+    category: collegeModel.clusterNames[String(clusterId)]!,
+    distance: distances[clusterId]!,
     distances,
   };
 }

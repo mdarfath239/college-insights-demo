@@ -250,7 +250,7 @@ function Index() {
                         <div className="h-2 overflow-hidden rounded-full bg-secondary">
                           <div
                             className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${(d / Math.max(...result.distances)) * 100}%`, background: CLUSTER_COLORS[name], opacity: i === result.clusterId ? 1 : 0.4 }}
+                            style={{ width: `${(d / Math.max(...result.distances)) * 100}%`, background: name ? CLUSTER_COLORS[name] : undefined, opacity: i === result.clusterId ? 1 : 0.4 }}
                           />
                         </div>
                       </div>
