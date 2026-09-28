@@ -259,6 +259,34 @@ function Index() {
                     );
                   })}
                 </div>
+                <div className="mt-6">
+                  <p className="text-sm font-medium">Colleges most similar to your input</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Real colleges from the training data, nearest first — measured on the same five features.
+                  </p>
+                  <ol className="mt-3 space-y-2">
+                    {result.nearestColleges.map((c, i) => (
+                      <li
+                        key={c.name}
+                        className="flex items-center gap-3 rounded-xl border border-border bg-secondary/50 px-3 py-2.5"
+                      >
+                        <span className="font-mono text-xs text-muted-foreground w-4">{i + 1}</span>
+                        <span
+                          className="h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ background: CLUSTER_COLORS[c.category] }}
+                          title={c.category}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">{c.name}</p>
+                          <p className="font-mono text-[11px] text-muted-foreground">
+                            {c.placementPercentage}% placement · {c.averagePackage.toFixed(1)} LPA · {formatINR(c.annualFees)}/yr
+                          </p>
+                        </div>
+                        <span className="font-mono text-xs text-muted-foreground">{c.distance.toFixed(2)}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
                 <p className="mt-6 text-xs text-muted-foreground">Your input is also marked on the scatter plot above.</p>
               </div>
             ) : (
